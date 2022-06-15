@@ -1,6 +1,7 @@
 package ca.utoronto.lms.shared.controller;
 
 import ca.utoronto.lms.shared.dto.BaseDTO;
+import ca.utoronto.lms.shared.model.BaseEntity;
 import ca.utoronto.lms.shared.service.BaseService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
-public abstract class BaseController<Model, DTO extends BaseDTO<ID>, ID> {
+public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends BaseDTO<ID>, ID> {
     private final BaseService<Model, DTO, ID> service;
 
     @GetMapping("/all")
@@ -24,8 +25,9 @@ public abstract class BaseController<Model, DTO extends BaseDTO<ID>, ID> {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DTO>> getAll(Pageable pageable) {
-        return new ResponseEntity<>(service.findAll(pageable), HttpStatus.OK);
+    public ResponseEntity<Page<DTO>> getAll(
+            Pageable pageable, @RequestParam(defaultValue = "") String search) {
+        return new ResponseEntity<>(service.findAll(pageable, search), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -61,10 +63,8 @@ public abstract class BaseController<Model, DTO extends BaseDTO<ID>, ID> {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable ID id) {
-        if (!service.delete(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<HttpStatus> delete(@PathVariable Set<ID> id) {
+        service.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

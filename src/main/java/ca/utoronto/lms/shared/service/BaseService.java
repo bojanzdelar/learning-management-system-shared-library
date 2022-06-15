@@ -1,29 +1,31 @@
 package ca.utoronto.lms.shared.service;
 
+import ca.utoronto.lms.shared.dto.BaseDTO;
 import ca.utoronto.lms.shared.mapper.BaseMapper;
+import ca.utoronto.lms.shared.model.BaseEntity;
+import ca.utoronto.lms.shared.repository.BaseRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
-public abstract class BaseService<Model, DTO, ID> {
-    private final PagingAndSortingRepository<Model, ID> repository;
+public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends BaseDTO<ID>, ID> {
+    private final BaseRepository<Model, ID> repository;
     private final BaseMapper<Model, DTO> mapper;
 
     public List<DTO> findAll() {
-        return mapper.toDTO((List<Model>) repository.findAll());
+        return mapper.toDTO(repository.findAll());
     }
 
-    public Page<DTO> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(mapper::toDTO);
+    public Page<DTO> findAll(Pageable pageable, String search) {
+        return repository.findContaining(pageable, "%" + search + "%").map(mapper::toDTO);
     }
 
     public List<DTO> findById(Set<ID> id) {
-        return mapper.toDTO((List<Model>) repository.findAllById(id));
+        return mapper.toDTO(repository.findAllById(id));
     }
 
     public DTO save(DTO DTO) {
@@ -31,11 +33,7 @@ public abstract class BaseService<Model, DTO, ID> {
         return mapper.toDTO(repository.save(model));
     }
 
-    public boolean delete(ID id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void delete(Set<ID> id) {
+        repository.deleteAllByIdInBatch(id);
     }
 }
