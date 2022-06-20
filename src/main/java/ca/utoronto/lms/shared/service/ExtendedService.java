@@ -15,12 +15,19 @@ import java.util.stream.Collectors;
 public abstract class ExtendedService<Model extends BaseEntity<ID>, DTO extends BaseDTO<ID>, ID>
         extends BaseService<Model, DTO, ID> {
     private final BaseRepository<Model, ID> repository;
-    private final BaseMapper<Model, DTO> mapper;
+    private final BaseMapper<Model, DTO, ID> mapper;
 
-    public ExtendedService(BaseRepository<Model, ID> repository, BaseMapper<Model, DTO> mapper) {
+    public ExtendedService(
+            BaseRepository<Model, ID> repository, BaseMapper<Model, DTO, ID> mapper) {
         super(repository, mapper);
         this.repository = repository;
         this.mapper = mapper;
+    }
+
+    @Override
+    public List<DTO> findAll() {
+        List<DTO> DTO = super.findAll();
+        return DTO.isEmpty() ? DTO : mapMissingValues(DTO);
     }
 
     @Override
@@ -57,7 +64,9 @@ public abstract class ExtendedService<Model extends BaseEntity<ID>, DTO extends 
                                 missingList.stream()
                                         .filter(
                                                 (missing) ->
-                                                        getter.get(el).getId() == missing.getId())
+                                                        getter.get(el)
+                                                                .getId()
+                                                                .equals(missing.getId()))
                                         .findFirst()
                                         .orElse(null)));
     }

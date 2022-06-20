@@ -4,6 +4,7 @@ import ca.utoronto.lms.shared.dto.BaseDTO;
 import ca.utoronto.lms.shared.model.BaseEntity;
 import ca.utoronto.lms.shared.service.BaseService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
+@Slf4j
 public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends BaseDTO<ID>, ID> {
     private final BaseService<Model, DTO, ID> service;
 
@@ -44,6 +46,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
         try {
             return new ResponseEntity<>(service.save(DTO), HttpStatus.CREATED);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -58,6 +61,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
         try {
             return new ResponseEntity<>(service.save(DTO), HttpStatus.OK);
         } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

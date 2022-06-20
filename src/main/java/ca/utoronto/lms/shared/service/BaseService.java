@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends BaseDTO<ID>, ID> {
     private final BaseRepository<Model, ID> repository;
-    private final BaseMapper<Model, DTO> mapper;
+    private final BaseMapper<Model, DTO, ID> mapper;
 
     public List<DTO> findAll() {
         return mapper.toDTO(repository.findAll());
