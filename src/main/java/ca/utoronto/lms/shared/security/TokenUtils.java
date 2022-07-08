@@ -13,7 +13,7 @@ public class TokenUtils {
     @Value("${token.secret}")
     private String secret;
 
-    private Claims getClaims(String token) {
+    public Claims getClaims(String token) {
         try {
             return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         } catch (Exception exception) {
@@ -21,7 +21,7 @@ public class TokenUtils {
         }
     }
 
-    private boolean isExpired(String token) {
+    public boolean isExpired(String token) {
         try {
             return getClaims(token).getExpiration().before(new Date(System.currentTimeMillis()));
         } catch (Exception exception) {

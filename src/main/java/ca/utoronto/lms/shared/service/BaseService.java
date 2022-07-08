@@ -17,7 +17,7 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
     private final BaseMapper<Model, DTO, ID> mapper;
 
     public List<DTO> findAll() {
-        return mapper.toDTO(repository.findAll());
+        return mapper.toDTO((List<Model>) repository.findAll());
     }
 
     public Page<DTO> findAll(Pageable pageable, String search) {
@@ -25,7 +25,7 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
     }
 
     public List<DTO> findById(Set<ID> id) {
-        return mapper.toDTO(repository.findAllById(id));
+        return mapper.toDTO((List<Model>) repository.findAllById(id));
     }
 
     public DTO save(DTO DTO) {
@@ -34,6 +34,6 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
     }
 
     public void delete(Set<ID> id) {
-        repository.deleteAllByIdInBatch(id);
+        repository.softDeleteByIds(id);
     }
 }

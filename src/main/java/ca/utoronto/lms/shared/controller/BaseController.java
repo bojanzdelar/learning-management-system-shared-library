@@ -34,7 +34,13 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
 
     @GetMapping("/{id}")
     public ResponseEntity<List<DTO>> get(@PathVariable Set<ID> id) {
-        List<DTO> DTO = service.findById(id);
+        List<DTO> DTO;
+        try {
+            DTO = service.findById(id);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         if (DTO.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -55,10 +61,10 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
     public ResponseEntity<DTO> update(@PathVariable ID id, @RequestBody DTO DTO) {
         DTO.setId(id);
         Set<ID> ids = new HashSet<>(Arrays.asList(id));
-        if (service.findById(ids).isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
         try {
+            if (service.findById(ids).isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
             return new ResponseEntity<>(service.save(DTO), HttpStatus.OK);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -68,7 +74,12 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable Set<ID> id) {
-        service.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            service.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
