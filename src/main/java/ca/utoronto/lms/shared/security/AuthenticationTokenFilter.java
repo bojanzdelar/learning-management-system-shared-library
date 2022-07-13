@@ -2,7 +2,7 @@ package ca.utoronto.lms.shared.security;
 
 import ca.utoronto.lms.shared.feign.AuthFeignClient;
 import io.jsonwebtoken.Claims;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +16,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
-    @Autowired private AuthFeignClient authFeignClient;
-    @Autowired private TokenUtils tokenUtils;
+    private final AuthFeignClient authFeignClient;
+    private final TokenUtils tokenUtils;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

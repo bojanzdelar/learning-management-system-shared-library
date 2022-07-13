@@ -3,8 +3,9 @@ package ca.utoronto.lms.shared.controller;
 import ca.utoronto.lms.shared.dto.BaseDTO;
 import ca.utoronto.lms.shared.model.BaseEntity;
 import ca.utoronto.lms.shared.service.BaseService;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,9 +17,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@AllArgsConstructor
-@Slf4j
+@RequiredArgsConstructor
 public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends BaseDTO<ID>, ID> {
+    protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+
     private final BaseService<Model, DTO, ID> service;
 
     @GetMapping("/all")
@@ -38,7 +40,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
         try {
             DTO = service.findById(id);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (DTO.isEmpty()) {
@@ -52,7 +54,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
         try {
             return new ResponseEntity<>(service.save(DTO), HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -67,7 +69,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
             }
             return new ResponseEntity<>(service.save(DTO), HttpStatus.OK);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
@@ -78,7 +80,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
             service.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            logger.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

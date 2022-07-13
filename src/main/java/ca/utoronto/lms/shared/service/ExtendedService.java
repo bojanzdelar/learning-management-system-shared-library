@@ -85,14 +85,17 @@ public abstract class ExtendedService<Model extends BaseEntity<ID>, DTO extends 
 
     protected abstract List<DTO> mapMissingValues(List<DTO> DTO);
 
+    @FunctionalInterface
     protected interface FeignClient<DTO, ID> {
         List<DTO> call(Set<ID> ids);
     }
 
+    @FunctionalInterface
     protected interface Getter<DTO, ID> {
         BaseDTO<ID> get(DTO DTO);
     }
 
+    @FunctionalInterface
     protected interface Setter<DTO, OtherDTO> {
         void set(DTO DTO, OtherDTO val);
     }
