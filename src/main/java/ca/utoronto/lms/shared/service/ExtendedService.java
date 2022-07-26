@@ -42,7 +42,7 @@ public abstract class ExtendedService<Model extends BaseEntity<ID>, DTO extends 
     @Override
     public List<DTO> findById(Set<ID> id) {
         List<DTO> DTO = super.findById(id);
-        return DTO.isEmpty() ? DTO : mapMissingValues(DTO);
+        return mapMissingValues(DTO);
     }
 
     protected Set<ID> getID(List<DTO> list, Getter<DTO, ID> getter) {
