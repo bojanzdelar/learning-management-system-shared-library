@@ -1,6 +1,7 @@
 package ca.utoronto.lms.shared.service;
 
 import ca.utoronto.lms.shared.dto.BaseDTO;
+import ca.utoronto.lms.shared.exception.NotFoundException;
 import ca.utoronto.lms.shared.mapper.BaseMapper;
 import ca.utoronto.lms.shared.model.BaseEntity;
 import ca.utoronto.lms.shared.repository.BaseRepository;
@@ -24,16 +25,29 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
         return repository.findContaining(pageable, "%" + search + "%").map(mapper::toDTO);
     }
 
-    public List<DTO> findById(Set<ID> id) {
-        return mapper.toDTO((List<Model>) repository.findAllById(id));
+    public List<DTO> findById(Set<ID> ids) {
+        boolean anyNotFound = ids.stream().anyMatch((id) -> !repository.existsById(id));
+        if (anyNotFound) {
+            throw new NotFoundException("ID not found");
+        }
+        return mapper.toDTO((List<Model>) repository.findAllById(ids));
     }
 
     public DTO save(DTO DTO) {
+        ID id = DTO.getId();
+        if (id != null && repository.existsById(id)) {
+            throw new NotFoundException("ID not found");
+        }
+
         Model model = mapper.toModel(DTO);
         return mapper.toDTO(repository.save(model));
     }
 
-    public void delete(Set<ID> id) {
-        repository.softDeleteByIds(id);
+    public void delete(Set<ID> ids) {
+        boolean anyNotFound = ids.stream().anyMatch((id) -> !repository.existsById(id));
+        if (anyNotFound) {
+            throw new NotFoundException("ID not found");
+        }
+        repository.softDeleteByIds(ids);
     }
 }
