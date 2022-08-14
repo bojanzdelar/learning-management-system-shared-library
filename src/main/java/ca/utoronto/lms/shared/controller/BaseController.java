@@ -4,6 +4,7 @@ import ca.utoronto.lms.shared.dto.BaseDTO;
 import ca.utoronto.lms.shared.model.BaseEntity;
 import ca.utoronto.lms.shared.service.BaseService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
 
     @GetMapping
     public ResponseEntity<Page<DTO>> getAll(
-            Pageable pageable, @RequestParam(defaultValue = "") String search) {
+            @ParameterObject Pageable pageable, @RequestParam(defaultValue = "") String search) {
         return new ResponseEntity<>(service.findAll(pageable, search), HttpStatus.OK);
     }
 

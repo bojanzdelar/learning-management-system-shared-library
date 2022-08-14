@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -16,21 +17,25 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected ResponseEntity<ApiError> handleBadRequest(BadRequestException exception) {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, exception);
     }
 
     @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected ResponseEntity<ApiError> handleAuthentication(AuthenticationException exception) {
         return buildResponseEntity(HttpStatus.UNAUTHORIZED, exception);
     }
 
     @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     protected ResponseEntity<ApiError> handleForbidden(ForbiddenException exception) {
         return buildResponseEntity(HttpStatus.FORBIDDEN, exception);
     }
 
     @ExceptionHandler({NotFoundException.class, UsernameNotFoundException.class})
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     protected ResponseEntity<ApiError> handleNotFound(Exception exception) {
         return buildResponseEntity(HttpStatus.NOT_FOUND, exception);
     }
