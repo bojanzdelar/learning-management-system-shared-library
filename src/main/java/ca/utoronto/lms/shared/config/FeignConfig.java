@@ -3,6 +3,7 @@ package ca.utoronto.lms.shared.config;
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -16,9 +17,9 @@ public class FeignConfig {
             ServletRequestAttributes requestAttributes =
                     (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
             HttpServletRequest request = requestAttributes.getRequest();
-            String token = request.getHeader("Authorization");
+            String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (token != null) {
-                requestTemplate.header("Authorization", token);
+                requestTemplate.header(HttpHeaders.AUTHORIZATION, token);
             }
         };
     }

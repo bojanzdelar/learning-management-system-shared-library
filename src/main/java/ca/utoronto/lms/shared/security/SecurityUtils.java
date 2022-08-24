@@ -22,6 +22,8 @@ public class SecurityUtils {
     public static String TEACHER_ID_CLAIM = "teacherId";
     public static String STUDENT_ID_CLAIM = "studentId";
 
+    public static String BEARER_PREFIX = "Bearer ";
+
     public static String getUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal instanceof UserDetails ? ((UserDetails) principal).getUsername() : "";

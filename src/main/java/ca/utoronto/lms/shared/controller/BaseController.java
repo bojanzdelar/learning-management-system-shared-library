@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -31,17 +32,17 @@ public abstract class BaseController<Model extends BaseEntity<ID>, DTO extends B
 
     @GetMapping("/{id}")
     public ResponseEntity<List<DTO>> get(@PathVariable Set<ID> id) {
-        List<DTO> DTO = service.findById(id);
-        return new ResponseEntity<>(DTO, HttpStatus.OK);
+        return new ResponseEntity<>(service.findById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<DTO> create(@RequestBody DTO DTO) {
+    public ResponseEntity<DTO> create(@Valid @RequestBody DTO DTO) {
+        DTO.setId(null);
         return new ResponseEntity<>(service.save(DTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DTO> update(@PathVariable ID id, @RequestBody DTO DTO) {
+    public ResponseEntity<DTO> update(@PathVariable ID id, @Valid @RequestBody DTO DTO) {
         DTO.setId(id);
         return new ResponseEntity<>(service.save(DTO), HttpStatus.OK);
     }

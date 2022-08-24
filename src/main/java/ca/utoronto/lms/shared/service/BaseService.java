@@ -8,6 +8,7 @@ import ca.utoronto.lms.shared.repository.BaseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -33,9 +34,10 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
         return mapper.toDTO((List<Model>) repository.findAllById(ids));
     }
 
+    @Transactional
     public DTO save(DTO DTO) {
         ID id = DTO.getId();
-        if (id != null && repository.existsById(id)) {
+        if (id != null && !repository.existsById(id)) {
             throw new NotFoundException("ID not found");
         }
 
@@ -43,6 +45,7 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
         return mapper.toDTO(repository.save(model));
     }
 
+    @Transactional
     public void delete(Set<ID> ids) {
         boolean anyNotFound = ids.stream().anyMatch((id) -> !repository.existsById(id));
         if (anyNotFound) {
