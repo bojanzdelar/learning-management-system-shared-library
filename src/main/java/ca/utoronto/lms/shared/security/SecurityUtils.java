@@ -17,6 +17,8 @@ public class SecurityUtils {
     public static Long ROLE_STUDENT_ID = 4L;
     public static String ROLE_STUDENT = "ROLE_STUDENT";
 
+    public static Long ROOT_USER_ID = 1337L;
+
     public static String USER_ID_CLAIM = "userId";
     public static String ADMIN_ID_CLAIM = "adminId";
     public static String TEACHER_ID_CLAIM = "teacherId";

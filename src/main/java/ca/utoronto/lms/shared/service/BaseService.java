@@ -41,6 +41,11 @@ public abstract class BaseService<Model extends BaseEntity<ID>, DTO extends Base
             throw new NotFoundException("ID not found");
         }
 
+        return this.forceSave(DTO);
+    }
+
+    @Transactional
+    public DTO forceSave(DTO DTO) {
         Model model = mapper.toModel(DTO);
         return mapper.toDTO(repository.save(model));
     }
