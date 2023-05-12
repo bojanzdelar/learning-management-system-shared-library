@@ -2,6 +2,8 @@
 
 Shared library for Spring Boot microservices in Learning management system
 
+[![](https://jitpack.io/v/bojanzdelar/learning-management-system-shared-library.svg)](https://jitpack.io/#bojanzdelar/learning-management-system-shared-library)
+
 ## Using with Maven
 
 To use it in your Maven build add:
@@ -23,5 +25,3 @@ and the dependency:
     <version>Tag</version>
 </dependency>
 ```
-
-[![](https://jitpack.io/v/bojanzdelar/learning-management-system-shared-library.svg)](https://jitpack.io/#bojanzdelar/learning-management-system-shared-library)
