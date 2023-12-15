@@ -1,6 +1,6 @@
 # Learning management system - Shared library
 
-Shared library for Spring Boot microservices in Learning management system
+Shared library for Spring Boot RESTful microservices in Learning management system
 
 [![](https://jitpack.io/v/bojanzdelar/learning-management-system-shared-library.svg)](https://jitpack.io/#bojanzdelar/learning-management-system-shared-library)
 
